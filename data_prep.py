@@ -13,7 +13,7 @@ class blaaaa(object):
 
 class data_prep(object):
     """docstring for data_prep."""
-    def __init__(self, data):
+    def __init__(self, data, price_position = 2):
         super(data_prep, self).__init__()
         self.x_train = []
         self.y_train = []
@@ -24,16 +24,16 @@ class data_prep(object):
         self.hh_4 = []
         self.dd_1 = []
         # prep data and set time frames
-        self.__parse_time_frames(data)
-        self.__prep(data)
+        self.__parse_time_frames(data, price_position)
+        self.__prep(data, price_position)
 
 
-    def __prep(self, data):
+    def __prep(self, data, price_position = 2):
 
         if isinstance(data, str):
             # create training set
             training_original = pd.read_csv(data)
-            training_set = training_original.iloc[:, 2:3].values
+            training_set = training_original.iloc[:, price_position].values
 
         else:
             training_set = data
@@ -59,7 +59,7 @@ class data_prep(object):
     # the time frame defaults are only for referance, thaey can be augmented but it is not suggested. Parse time frames into...
     # min: 5, 15, 30
     # hr: 1, 4, 23
-    def __parse_time_frames(self, data, m_15 = 15, m_30 = 30, h_1 = 1, h_4 = 4):
+    def __parse_time_frames(self, data, price_position = 2, m_15 = 15, m_30 = 30, h_1 = 1, h_4 = 4):
         t_5 = pd.read_csv('data/EURUSD_2016_AUG_NOV.csv').values
         # create arrays for the different time frames to train individual RNN's on
         for row in range(len(t_5)):
@@ -81,19 +81,19 @@ class data_prep(object):
 
             if hh != hh2:
                 if hh == 23 and first_hour_num and no_dup:
-                    self.dd_1.append(t_5[row, 2])
+                    self.dd_1.append(t_5[row, price_position])
 
                 if hh % h_4 == 0 and hh > h_4 and first_hour_num and no_dup:
-                    self.hh_4.append(t_5[row, 2])
+                    self.hh_4.append(t_5[row, price_position])
 
             if mm == 0 and no_dup:
-                self.hh_1.append(t_5[row, 2])
+                self.hh_1.append(t_5[row, price_position])
 
             if mm % m_30 == 0 and row > m_30 and no_dup:
-                self.mm_30.append(t_5[row, 2])
+                self.mm_30.append(t_5[row, price_position])
 
             if mm % m_15 == 0 and row > m_15 and no_dup:
-                self.mm_15.append(t_5[row, 2])
+                self.mm_15.append(t_5[row, price_position])
 
 
     # only used to parse records into time frames
