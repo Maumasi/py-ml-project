@@ -2,6 +2,9 @@
 .idea/*
 __pycache__
 __pycache__/*
+# ignore data files
+data
+data/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
