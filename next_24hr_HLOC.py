@@ -1,7 +1,7 @@
 from predict_HLOC import *
 from lab_chart import *
 
-data = 'data/2016-2017_APR_26.csv'
+data = 'data/EURUSD_2010-current.csv'
 
 highs = []
 lows = []
@@ -13,7 +13,7 @@ for hour in range(1, 24):
         
     time_frame = predict_HLOC(
             data = data,
-            batch_size = 20,
+            batch_size = 150 - ((hour * 3) + (int(hour / 2))),
             epochs = (50 * hour),
             hour = hour
         )
