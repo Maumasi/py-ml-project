@@ -11,8 +11,6 @@ from sklearn.preprocessing import MinMaxScaler
 training_original = pd.read_csv('data/EURUSD_2016_AUG_NOV.csv')
 training_set = training_original.iloc[:, 2:3].values
 
-print(training_set)
-
 # features
 feature_scaler = MinMaxScaler()
 training_set_scaled = feature_scaler.fit_transform(training_set)
@@ -70,8 +68,8 @@ rnn_regresion.compile(
 rnn_regresion.fit(
         x_train,
         y_train,
-        batch_size = 80,
-        epochs = 100
+        batch_size = 150,
+        epochs = 5
         )
 
 
@@ -101,7 +99,6 @@ print('')
 print(raw_predicted_price)
 print('')
 print('very next prices')
-print(v)
 # Pt 4: graph results =-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=--=--=-=-=-=-=-=-=-=--=
 
 
