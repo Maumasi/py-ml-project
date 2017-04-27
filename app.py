@@ -5,8 +5,15 @@ from train_model import *
 # pass in data
 data = 'data/EURUSD_2016_AUG_NOV.csv'
 # 15 min records
-data_15 = data_prep(data)
-data_15 = data_15.mm_30
+data_hr3 = data_prep(data, custom_hour = 3, parse_time = True)
+data_hr = data_hr3.custom_hh
+# data_15 = data_15.mm_15
+
+# print(data_15.custom_hh[1][0])
+# print(data_15.custom_hh[2][0])
+# print(data_15.custom_hh[3][0])
+# print(data_15.custom_hh[4][0])
+# print(data_15.custom_hh[5][0])
 
 price_open = 2
 price_high = 3
@@ -14,22 +21,22 @@ price_low = 4
 price_close = 5
 
 # prep training data for prices
-high_data = data_prep(data, price_high)
-low_data = data_prep(data, price_low)
+high_data = data_prep(data_hr, price_high)
+low_data = data_prep(data_hr, price_low)
 # extract training data
 
 # init RNN models: this also trains the RNN model
 model_high = train_model(
         high_data.x_train, 
         high_data.y_train,
-        batch_size = 500,
+        batch_size = 200,
         epochs = 5
     )
 
 model_low = train_model(
         low_data.x_train, 
         low_data.y_train,
-        batch_size = 500,
+        batch_size = 200,
         epochs = 5
     )
 
@@ -58,7 +65,7 @@ print(p_lows)
 
 
 
-
+# make a chart to display data
 plt.plot(
         high_data_p.predicted_price, color = 'green',
         label = 'Pridicted Highs'
