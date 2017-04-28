@@ -4,9 +4,10 @@ from train_model import *
 
 class predict_HLOC(object):
     """docstring for predict_HLOC."""
-    def __init__(self, data, batch_size = 50, epochs = 100, hour = 1):
+    def __init__(self, data, batch_size = 50, epochs = 100, hour = 1, minute = 1):
         super(predict_HLOC, self).__init__()
         self.hour = hour
+        self.minute = minute
         self.data = data
         self.batch_size = batch_size
         self.epochs = epochs
@@ -14,9 +15,12 @@ class predict_HLOC(object):
         self.low = 0.0
         self.open = 0.0
         self.close = 0.0
-        # pass in data
-        self.filtered_data = data_prep(self.data, custom_hour = self.hour, parse_time = True)
-        self.hour_data = self.filtered_data.custom_hh
+        # pass in data for custom hour
+        self.filtered_data_hh = data_prep(self.data, custom_hour = self.hour, parse_time = True)
+        self.hour_data = self.filtered_data_hh.custom_hh
+        # pass data for custom minute
+        self.filtered_data_mm = data_prep(self.data, custom_minute = self.minute, parse_time = True)
+        self.minute_data = self.filtered_data_mm.custom_mm
 
         
     def all(self):
@@ -85,6 +89,8 @@ class predict_HLOC(object):
         self.open = open_data_p.last_prediction
         self.close = close_data_p.last_prediction
         
+    
+        
     def highs(self):
         price_high = 2
         # prep training data for prices
@@ -124,4 +130,25 @@ class predict_HLOC(object):
         low_data_p.prediction(self.data, candle_low, price_low)
         # pass the next prediction for the given hour
         self.low = low_data_p.last_prediction
-        
+    
+    
+    def opens(self):
+        price_open = 1
+
+        # prep training data for prices
+        open_data = data_prep(self.hour_data, price_open)
+        # init RNN models: this also trains the RNN model
+        model_open = train_model(
+                open_data.x_train,
+                open_data.y_train,
+                batch_size = self.batch_size,
+                epochs = self.epochs
+            )
+        # set up traind models
+        candle_open = model_open.rnn
+        # pass in assesment data
+        open_data_p = data_prep(self.data, price_open)
+        # make predictions
+        open_data_p.prediction(self.data, candle_open, price_open)
+        # pass the next prediction for the given hour
+        self.open = open_data_p.last_prediction
