@@ -1,5 +1,6 @@
 from predict_HLOC import *
 from lab_chart import *
+# from time import sleep
 
 data = 'data/EURUSD_2010-current.csv'
 
@@ -8,33 +9,29 @@ lows = []
 opens = []
 closes = []
 
-for hour in range(1, 24):
+minutes = (30 * 60)
+
+# only accurate up to 13 (1pm)
+for hour in range(20, 24):
     print('hour round: ' + str(hour))
+    count = (50 * hour)
+    if count >= 200:
+        count = 200
         
     time_frame = predict_HLOC(
             data = data,
             batch_size = 150 - ((hour * 3) + (int(hour / 2))),
-            epochs = (50 * hour),
+            epochs = count,
             hour = hour
         )
+    
+    time_frame.highs()
 
     highs.append(time_frame.high)
-    lows.append(time_frame.low)
-    opens.append(time_frame.open)
-    closes.append(time_frame.close)
+    # give the computer a chance to cool down
+    # sleep(minutes)
 
 
-print('highs')
-print(highs)
-
-print('lows')
-print(lows)
-
-print('opens')
-print(opens)
-
-print('closes')
-print(closes)
 
 chart = lab_chart()
 # 

@@ -14,20 +14,22 @@ class predict_HLOC(object):
         self.low = 0.0
         self.open = 0.0
         self.close = 0.0
-
         # pass in data
-        filtered_data = data_prep(self.data, custom_hour = self.hour, parse_time = True)
-        hour_data = filtered_data.custom_hh
+        self.filtered_data = data_prep(self.data, custom_hour = self.hour, parse_time = True)
+        self.hour_data = self.filtered_data.custom_hh
+
+        
+    def all(self):
         price_open = 1
         price_high = 2
         price_low = 3
         price_close = 4
 
         # prep training data for prices
-        high_data = data_prep(hour_data, price_high)
-        low_data = data_prep(hour_data, price_low)
-        open_data = data_prep(hour_data, price_open)
-        close_data = data_prep(hour_data, price_close)
+        high_data = data_prep(self.hour_data, price_high)
+        low_data = data_prep(self.hour_data, price_low)
+        open_data = data_prep(self.hour_data, price_open)
+        close_data = data_prep(self.hour_data, price_close)
         # extract training data
 
         # init RNN models: this also trains the RNN model
@@ -82,3 +84,44 @@ class predict_HLOC(object):
         self.low = low_data_p.last_prediction
         self.open = open_data_p.last_prediction
         self.close = close_data_p.last_prediction
+        
+    def highs(self):
+        price_high = 2
+        # prep training data for prices
+        high_data = data_prep(self.hour_data, price_high)
+        # init RNN models: this also trains the RNN model
+        model_high = train_model(
+                high_data.x_train,
+                high_data.y_train,
+                batch_size = self.batch_size,
+                epochs = self.epochs
+            )
+        # set up traind models
+        candle_high = model_high.rnn
+        # pass in assesment data
+        high_data_p = data_prep(self.data, price_high)
+        # make predictions
+        high_data_p.prediction(self.data, candle_high, price_high) 
+        # pass the next prediction for the given hour
+        self.high = high_data_p.last_prediction
+        
+    def lows(self):
+        price_low = 3
+        # prep training data for prices
+        low_data = data_prep(self.hour_data, price_low)
+        # init RNN models: this also trains the RNN model
+        model_low = train_model(
+                low_data.x_train,
+                low_data.y_train,
+                batch_size = self.batch_size,
+                epochs = self.epochs
+            )
+        # set up traind models
+        candle_low = model_low.rnn
+        # pass in assesment data
+        low_data_p = data_prep(self.data, price_low)
+        # make predictions
+        low_data_p.prediction(self.data, candle_low, price_low)
+        # pass the next prediction for the given hour
+        self.low = low_data_p.last_prediction
+        
