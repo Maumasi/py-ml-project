@@ -43,7 +43,14 @@ for time_ref in range(1, 20):
     #         epochs = count,
     #         minute = min_5
     #     )
-
+    
+    
+    # call price to measure
+    # .all()
+    # .highs()
+    # .lows()
+    # .opens()
+    # .closes()
     time_frame.highs()
 
 
