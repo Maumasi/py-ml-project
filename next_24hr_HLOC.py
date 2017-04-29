@@ -1,5 +1,6 @@
 from predict_HLOC import *
 from lab_chart import *
+import time
 import csv
 # from time import sleep
 
@@ -72,9 +73,11 @@ for i in range(len(times)):
     output_data.append(data)
 
 # write to CSV
-with open('some.csv', 'w', newline='') as f:
-    writer = csv.writer(f)
+file_name = '{0}_{1}_{2}_prediction.csv'.format(localtime.tm_year, localtime.tm_mon, localtime.tm_mday)
+with open(file_name, 'w', newline='') as file:
+    writer = csv.writer(file)
     writer.writerows(output_data)
+ 
 
 # chart = lab_chart()
 #
