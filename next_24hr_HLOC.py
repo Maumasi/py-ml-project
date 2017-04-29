@@ -5,7 +5,7 @@ import csv
 # from time import sleep
 
 # 1 hour data
-data = 'data/EURUSD_2010-current.csv'
+data = 'data/EURUSD_h1_current_27.csv'
 
 # 5 min data
 # data = 'data/EURUSD_5min_pred_27.csv'
@@ -16,13 +16,10 @@ opens = []
 closes = []
 
 
-
-# minutes = (30 * 60)
-
 # only accurate up to 13 (1pm)
-for time_ref in range(1, 3):
+for time_ref in range(1, 20):
     print('Time round: ' + str(time_ref))
-    count = 1 # (20 * time_ref)
+    count = 1# (20 * time_ref)
     hour = time_ref
     min_5 = (time_ref * 5)
 
@@ -47,9 +44,7 @@ for time_ref in range(1, 3):
     #         minute = min_5
     #     )
 
-    time_frame.all()
-
-
+    time_frame.highs()
 
 
     times.append(hour)
@@ -73,11 +68,15 @@ for i in range(len(times)):
     output_data.append(data)
 
 # write to CSV
+localtime = time.localtime(time.time())
 file_name = '{0}_{1}_{2}_prediction.csv'.format(localtime.tm_year, localtime.tm_mon, localtime.tm_mday)
 with open(file_name, 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerows(output_data)
- 
+
+print('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
+print('FINISHED')
+print('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
 
 # chart = lab_chart()
 #
