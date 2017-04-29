@@ -17,9 +17,11 @@ closes = []
 
 
 # only accurate up to 13 (1pm)
-for time_ref in range(1, 20):
+for time_ref in range(1, 24):
+    batch_size = (80 - ((time_ref * 3) + (int(time_ref / 2))))
     print('Time round: ' + str(time_ref))
-    count = 1# (20 * time_ref)
+    print('Batch size: {0}'.format(batch_size))
+    count = (20 * time_ref)
     hour = time_ref
     min_5 = (time_ref * 5)
 
@@ -30,7 +32,7 @@ for time_ref in range(1, 20):
     # for predicting custom hour intervals
     time_frame = predict_HLOC(
             data = data,
-            batch_size = 150 - ((hour * 3) + (int(hour / 2))),
+            batch_size = batch_size,
             epochs = count,
             hour = hour
         )
