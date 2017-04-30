@@ -109,7 +109,7 @@ class data_prep(object):
                 if hh % h_4 == 0 and hh >= h_4 and first_hour_num and no_dup:
                     self.hh_4.append(t_5[row, price_position:price_position + 1])
 
-                if hh % custom_hour == 0 and first_hour_num and no_dup:
+                if hh < custom_hour and first_hour_num and no_dup:
                     self.custom_hh.append(t_5[row, price_position:price_position + 1])
 
             if mm == 0 and no_dup:
