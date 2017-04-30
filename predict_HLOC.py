@@ -152,3 +152,26 @@ class predict_HLOC(object):
         open_data_p.prediction(self.data, candle_open, price_open)
         # pass the next prediction for the given hour
         self.open = open_data_p.last_prediction
+        
+    
+    def closes(self):
+        price_close = 4
+        # prep training data for prices
+        close_data = data_prep(self.hour_data, price_close)
+        # extract training data
+        # init RNN models: this also trains the RNN model
+        model_close = train_model(
+                close_data.x_train,
+                close_data.y_train,
+                batch_size = self.batch_size,
+                epochs = self.epochs
+            )
+        # set up traind models
+        candle_close = model_close.rnn
+        # pass in assesment data
+        close_data_p = data_prep(self.data, price_close)
+        # make predictions
+        close_data_p.prediction(self.data, candle_close, price_close)
+        # pass the next prediction for the given hour
+        self.close = close_data_p.last_prediction
+        

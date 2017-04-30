@@ -5,7 +5,7 @@ from keras.layers import LSTM
 
 class train_model(object):
     """docstring for train_model."""
-    def __init__(self, x_train, y_train, neurons = 80, batch_size = 150, epochs = 50):
+    def __init__(self, x_train, y_train, neurons = 100, batch_size = 150, epochs = 50):
         super(train_model, self).__init__()
         self.x_train = x_train
         self.y_train = y_train
