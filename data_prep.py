@@ -24,19 +24,19 @@ class data_prep(object):
         self.last_prediction = 0.0
         self.feature_scaler = MinMaxScaler()
         # prep data and set time frames
-        self.__prep(data, price_position)
-        self.__parse_time_frames(data, custom_hour = custom_hour, custom_minute = custom_minute, price_position = price_position, parse_time = parse_time)
+        self.__prep(data, 1)
+        self.__parse_time_frames(data, custom_hour = custom_hour, custom_minute = custom_minute, price_position = 1, parse_time = parse_time)
 
-    def prediction(self, data, rnn, price_position = 3):
+    def prediction(self, data, rnn, price_position = 1):
         p_data = pd.read_csv(data)
-        p_data = p_data.iloc[:, price_position:price_position + 1].values
+        p_data = p_data.iloc[:, 1:].values
         # self.feature_scaler.fit_transform(p_data)
 
         inputs = self.feature_scaler.transform(p_data)
         # input fields
         records = len(p_data)
         time_step = 1
-        features = 1
+        features = 5
         inputs = np.reshape(inputs, (records, time_step, features))
         # make predictions
         predicted_price = rnn.predict(inputs)
@@ -46,12 +46,12 @@ class data_prep(object):
 
 
 
-    def __prep(self, data, price_position = 3):
+    def __prep(self, data, price_position = 1):
 
         if isinstance(data, str):
             # create training set
             training_original = pd.read_csv(data)
-            training_set = training_original.iloc[:, price_position:price_position + 1].values
+            training_set = training_original.iloc[:, price_position:].values
 
         else:
             training_set = data
@@ -69,14 +69,14 @@ class data_prep(object):
         # reshaping
         # training offset: time-step
         time_step = 1
-        number_of_features = 1
+        number_of_features = 5
         x_train = np.reshape(x_train, (max_training_records, time_step, number_of_features))
         self.x_train = x_train
 
     # the time frame defaults are only for referance, thaey can be augmented but it is not suggested. Parse time frames into...
     # min: 5, 15, 30
     # hr: 1, 4, 23
-    def __parse_time_frames(self, data, custom_hour, custom_minute, price_position = 2, parse_time = False, m_15 = 15, m_30 = 30, h_1 = 1, h_4 = 4):
+    def __parse_time_frames(self, data, custom_hour, custom_minute, price_position = 1, parse_time = False, m_15 = 15, m_30 = 30, h_1 = 1, h_4 = 4):
         if not parse_time:
             return -1
         t_5 = pd.read_csv(data).values
@@ -94,6 +94,8 @@ class data_prep(object):
             time2 = time2.split(':')
             hh2 = int(time2[0])
             mm2 = int(time2[1])
+            
+            
 
 
             # prevent multiple hous from being pushed to time frame array
@@ -104,25 +106,25 @@ class data_prep(object):
 
             if hh != hh2:
                 if hh == 23 and first_hour_num and no_dup:
-                    self.dd_1.append(t_5[row, price_position:price_position + 1])
+                    self.dd_1.append(t_5[row, 1:])
 
                 if hh % h_4 == 0 and hh >= h_4 and first_hour_num and no_dup:
-                    self.hh_4.append(t_5[row, price_position:price_position + 1])
+                    self.hh_4.append(t_5[row, 1:])
 
                 if hh % custom_hour == 0 and first_hour_num and no_dup:
-                    self.custom_hh.append(t_5[row, price_position:price_position + 1])
+                    self.custom_hh.append(t_5[row, 1:])
 
             if mm == 0 and no_dup:
-                self.hh_1.append(t_5[row, price_position:price_position + 1])
+                self.hh_1.append(t_5[row, 1:])
 
             if (hh == 0 or mm == m_30) and no_dup:
-                self.mm_30.append(t_5[row, price_position:price_position + 1])
+                self.mm_30.append(t_5[row, 1:])
 
             if ( mm == m_15 or mm == m_30 or mm == 45 or hh == 0) and no_dup:
-                self.mm_15.append(t_5[row, price_position:price_position + 1])
+                self.mm_15.append(t_5[row, 1:])
 
             if mm % custom_minute == 0 and mm > custom_minute and no_dup:
-                self.custom_mm.append(t_5[row, price_position:price_position + 1])
+                self.custom_mm.append(t_5[row, 1:])
 
 
     # only used to parse records into time frames

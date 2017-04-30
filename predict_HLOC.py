@@ -155,7 +155,7 @@ class predict_HLOC(object):
         
     
     def closes(self):
-        price_close = 4
+        price_close = 1
         # prep training data for prices
         close_data = data_prep(self.hour_data, price_close)
         # extract training data

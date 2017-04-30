@@ -8,8 +8,8 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
 # create training set
-training_original = pd.read_csv('data/EURUSD_2016_AUG_NOV.csv')
-training_set = training_original.iloc[:, 2:3].values
+training_original = pd.read_csv('data/EURUSD_h1_current_27.csv')
+training_set = training_original.iloc[:, 1:].values
 
 # features
 feature_scaler = MinMaxScaler()
@@ -26,7 +26,7 @@ y_train = training_set_scaled[1:len(training_set_scaled)]
 # reshaping
 # training offset: time-step
 time_step = 1
-number_of_features = 1
+number_of_features = 5
 x_train = np.reshape(x_train, (max_training_records, time_step, number_of_features))
 
 
@@ -41,7 +41,7 @@ from keras.layers import LSTM
 # init RNN
 rnn_regresion = Sequential()
 
-neurons = 80
+neurons = 50
 # input layer
 rnn_memory = LSTM(
         units = neurons,
@@ -53,7 +53,7 @@ rnn_regresion.add(rnn_memory)
 
 
 # output layer: output at time-step
-rnn_regresion.add(Dense(units = time_step))
+rnn_regresion.add(Dense(units = 5))
 
 
 # compile RNN
@@ -76,9 +76,9 @@ rnn_regresion.fit(
 # Pt 3 =-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=--=--=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-==
 
 # create testing set
-test_original = pd.read_csv('data/EURUSD_2017_JAN_APR.csv')
+test_original = pd.read_csv('data/EURUSD_h1_current_27.csv')
 
-real_price_set = test_original.iloc[:, 2:3].values
+real_price_set = test_original.iloc[:, 1:].values
 
 # scale inputs: feature_scaler
 inputs = feature_scaler.transform(real_price_set)
@@ -86,7 +86,7 @@ inputs = feature_scaler.transform(real_price_set)
 # turn inputs into a 3D array
 input_records = len(real_price_set)
 input_time_step = 1
-input_features = 1
+input_features = 5
 inputs = np.reshape(inputs, (input_records, input_time_step, input_features))
 
 predicted_price = rnn_regresion.predict(inputs)
@@ -96,9 +96,10 @@ raw_predicted_price = feature_scaler.inverse_transform(predicted_price)
 print('actual prices')
 print(test_original)
 print('')
+print('very next prices')
 print(raw_predicted_price)
 print('')
-print('very next prices')
+
 # Pt 4: graph results =-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=--=--=-=-=-=-=-=-=-=--=
 
 
@@ -165,17 +166,17 @@ def no_dups(open1, close1, open2, close2):
 
 
 
-t_5 = pd.read_csv('data/EURUSD_2016_AUG_NOV.csv').values
+t_5 = pd.read_csv('data/EURUSD_h1_pred_28.csv').values
 
 # create arrays for the different time frames to train individual RNN's on
 for row in range(len(t_5)):
-    date = t_5[row][1]
+    date = t_5[row][0]
     time = date[-12:-7]
     time = time.split(':')
     hh = int(time[0])
     mm = int(time[1])
 
-    date2 = t_5[row - 1][1]
+    date2 = t_5[row - 1][0]
     time2 = date2[-12:-7]
     time2 = time2.split(':')
     hh2 = int(time2[0])

@@ -24,13 +24,13 @@ class train_model(object):
         rnn_memory = LSTM(
                 units = self.neurons,
                 activation = 'sigmoid',
-                input_shape = (None, 1),
+                input_shape = (None, 5),
                 )
 
         self.rnn.add(rnn_memory)
 
         # output layer: output at time-step
-        self.rnn.add(Dense(units = 1))
+        self.rnn.add(Dense(units = 5))
 
         # compile RNN
         # rmsprop

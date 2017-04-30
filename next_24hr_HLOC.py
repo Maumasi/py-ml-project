@@ -26,7 +26,7 @@ price_point = 'close'
 traget_month = 'May'
 taget_day = 1
 # target range
-start = 21  # start iteration
+start = 1  # start iteration
 stop = 24   # stop iteration
 
 
@@ -62,7 +62,7 @@ for time_ref in range(start, stop):
     time_frame = predict_HLOC(
             data = data,
             batch_size = batch_size,
-            epochs = count,
+            epochs = 8, # count,
             hour = hour
         )
 
@@ -82,7 +82,7 @@ for time_ref in range(start, stop):
     # .lows()
     # .opens()
     # .closes()
-    time_frame.closes()
+    time_frame.all()
 
 
     times.append(hour)
@@ -107,7 +107,7 @@ for i in range(len(times)):
 
 # write to CSV
 localtime = time.localtime(time.time())
-file_name = 'predictions/{6}/{7}/{0}_{1}_{2}_{5}_{3}-{4}_test-prediction.csv'.format(
+file_name = 'predictions/{6}/{7}/{0}_{1}_{2}_{5}_{3}-{4}_demo-prediction.csv'.format(
         localtime.tm_year,  # current year
         localtime.tm_mon,   # current month
         localtime.tm_mday,  # currnet day
