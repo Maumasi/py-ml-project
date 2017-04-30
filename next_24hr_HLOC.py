@@ -24,7 +24,7 @@ closes = []
 
 # define the iteration range for recording records
 # also used with naming the ouput CSV file
-price_point = 'high'
+price_point = 'open-and-close'
 traget_month = 'May'
 taget_day = 1
 # target range
@@ -43,13 +43,13 @@ stop = 24   # stop iteration
 
 # only accurate up to 13 (1pm)
 for time_ref in range(start, stop):
-    batch_size = (50 - ((time_ref * 5) + (int(time_ref / 2))))
+    batch_size = 50 # (50 - ((time_ref * 5) + (int(time_ref / 2))))
     if batch_size < 5:
         batch_size = 5
         
     print('Time round: ' + str(time_ref))
     print('Batch size: {0}'.format(batch_size))
-    count = (10 + time_ref)
+    count = 10 # (10 + time_ref)
     hour = time_ref
     min_5 = (time_ref * 5)
 
@@ -80,11 +80,12 @@ for time_ref in range(start, stop):
     
     # call price to measure
     # .all()
-    # .highs() +
-    # .lows() +
-    # .opens() +
-    # .closes() +
-    time_frame.highs()
+    # .highs()
+    # .lows()
+    # .opens()
+    # .closes()
+    time_frame.opens()
+    time_frame.closes()
 
 
     times.append(hour)
@@ -109,7 +110,7 @@ for i in range(len(times)):
 
 # write to CSV
 localtime = time.localtime(time.time())
-file_name = 'predictions/{6}/{7}/{0}_{1}_{2}_{5}_{3}-{4}_test-28-prediction.csv'.format(
+file_name = 'predictions/{6}/{7}/{0}_{1}_{2}_{5}_{3}-{4}_new-hour-new-hour-new-hour-test-28-prediction.csv'.format(
         localtime.tm_year,  # current year
         localtime.tm_mon,   # current month
         localtime.tm_mday,  # currnet day
