@@ -35,7 +35,7 @@ class data_prep(object):
         inputs = self.feature_scaler.transform(p_data)
         # input fields
         records = len(p_data)
-        time_step = 1
+        time_step = -24
         features = 5
         inputs = np.reshape(inputs, (records, time_step, features))
         # make predictions
@@ -111,7 +111,7 @@ class data_prep(object):
                 if hh % h_4 == 0 and hh >= h_4 and first_hour_num and no_dup:
                     self.hh_4.append(t_5[row, 1:])
 
-                if hh % custom_hour == 0 and first_hour_num and no_dup:
+                if (hh % custom_hour == 0 or hh < custom_hour) and first_hour_num and no_dup:
                     self.custom_hh.append(t_5[row, 1:])
 
             if mm == 0 and no_dup:

@@ -27,7 +27,7 @@ traget_month = 'May'
 taget_day = 1
 # target range
 start = 1  # start iteration
-stop = 24   # stop iteration
+stop = 10   # stop iteration
 
 
 
@@ -78,11 +78,10 @@ for time_ref in range(start, stop):
     
     # call price to measure
     # .all()
-    # .highs()
-    # .lows()
-    # .opens()
-    # .closes()
-    time_frame.all()
+    time_frame.highs()
+    time_frame.lows()
+    #time_frame.opens()
+    #time_frame.closes()
 
 
     times.append(hour)
