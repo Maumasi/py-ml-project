@@ -15,7 +15,7 @@ training_set = training_original.iloc[:, 1:].values
 feature_scaler = MinMaxScaler()
 training_set_scaled = feature_scaler.fit_transform(training_set)
 # num to drop the last record
-max_training_records = len(training_set_scaled) - 1
+max_training_records = len(training_set_scaled) - 1 
 
 # getting the inputs/outputs
 # train learning
@@ -25,7 +25,7 @@ y_train = training_set_scaled[1:len(training_set_scaled)]
 
 # reshaping
 # training offset: time-step
-time_step = 1
+time_step = -4
 number_of_features = 5
 x_train = np.reshape(x_train, (max_training_records, time_step, number_of_features))
 
@@ -53,7 +53,7 @@ rnn_regresion.add(rnn_memory)
 
 
 # output layer: output at time-step
-rnn_regresion.add(Dense(units = 5))
+rnn_regresion.add(Dense(units = number_of_features))
 
 
 # compile RNN
@@ -85,7 +85,7 @@ inputs = feature_scaler.transform(real_price_set)
 
 # turn inputs into a 3D array
 input_records = len(real_price_set)
-input_time_step = 1
+input_time_step = -4
 input_features = 5
 inputs = np.reshape(inputs, (input_records, input_time_step, input_features))
 
