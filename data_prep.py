@@ -121,7 +121,7 @@ class data_prep(object):
             if ( mm == m_15 or mm == m_30 or mm == 45 or hh == 0) and no_dup:
                 self.mm_15.append(t_5[row, price_position:price_position + 1])
 
-            if (mm % custom_minute == 0 or mm < custom_minute) and no_dup:
+            if (hh == 0 or mm == m_30) and hh % custom_minute == 0 and no_dup:
                 self.custom_mm.append(t_5[row, price_position:price_position + 1])
 
 

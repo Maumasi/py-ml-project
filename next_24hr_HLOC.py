@@ -13,7 +13,11 @@ import csv
 # case study day 1 for: May 1st
 data = 'data/case_study/EURUSD_h1_case_study_D1_for_2017_5_1.csv'
 
-test_data = 'data/test_accuracy/EURUSD_test_pred_for_28.csv'
+# hr1 test data
+# test_data = 'data/test_accuracy/EURUSD_test_pred_for_28.csv'
+
+# 30 min test data
+# test_30_min = 'test/EURUSD_30_m_test.csv'
 
 # arrays used to record to ouput CSV file
 times = []
@@ -24,17 +28,20 @@ closes = []
 
 # define the iteration range for recording records
 # also used with naming the ouput CSV file
-price_point = 'open-and-close'
+price_point = 'highs-and-lows'
 traget_month = 'May'
 taget_day = 1
 # target range
 start = 1  # start iteration
 stop = 24   # stop iteration
 
-
+# ranges for 24hrs
+# hours:    1 - 24
+# minutes:  1 - 1440
+mm_30 = 30
 
 # Methods finished being called
-# .all() 
+# .all()
 # .highs() +
 # .lows() +
 # .opens() +
@@ -46,46 +53,45 @@ for time_ref in range(start, stop):
     batch_size = 50 # (50 - ((time_ref * 5) + (int(time_ref / 2))))
     if batch_size < 5:
         batch_size = 5
-        
-    print('Time round: ' + str(time_ref))
+
+    print('Time round: {0}'.format(time_ref))
     print('Batch size: {0}'.format(batch_size))
     count = 10 # (10 + time_ref)
     hour = time_ref
-    min_5 = (time_ref * 5)
+    minutes = (time_ref * mm_30)
 
     # 200 seems to be a good ref to boil down loss levels
     if count >= 20:
         count = 20
-        
+
     if batch_size == 5:
         count = 20
 
     # for predicting custom hour intervals
     time_frame = predict_HLOC(
-            data = test_data, # data,
+            data = data, # data,
             batch_size = batch_size,
             epochs = count,
             hour = hour
         )
 
 
-    # for predicting 5 minute intervals
+    # for predicting custom minute intervals
     # time_frame = predict_HLOC(
     #         data = data,
-    #         batch_size = 150 - ((time_ref * 3) + (int(time_ref / 2))),
+    #         batch_size = batch_size,
     #         epochs = count,
-    #         minute = min_5
+    #         minute = hour
     #     )
-    
-    
+
+
     # call price to measure
     # .all()
-    # .highs()
-    # .lows()
-    # .opens()
-    # .closes()
-    time_frame.opens()
-    time_frame.closes()
+    time_frame.highs()
+    time_frame.lows()
+    # time_frame.opens()
+    # time_frame.closes()
+    # time_frame.opens()
 
 
     times.append(hour)
@@ -110,7 +116,7 @@ for i in range(len(times)):
 
 # write to CSV
 localtime = time.localtime(time.time())
-file_name = 'predictions/{6}/{7}/{0}_{1}_{2}_{5}_{3}-{4}_new-hour-new-hour-new-hour-test-28-prediction.csv'.format(
+file_name = 'predictions/{6}/{7}/{0}_{1}_{2}_{5}_{3}-{4}_new-28-prediction.csv'.format(
         localtime.tm_year,  # current year
         localtime.tm_mon,   # current month
         localtime.tm_mday,  # currnet day
