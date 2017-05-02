@@ -5,13 +5,13 @@ import csv
 # from time import sleep
 
 # 1 hour data
-# data = 'data/EURUSD_h1_pred_28.csv'
+data = 'data/EURUSD_Candlestick_1_m_ASK_05.01.2015-27.04.2017.csv'
 
 # 5 min data
 # data = 'data/EURUSD_5min_pred_27.csv'
 
 # case study day 1 for: May 1st
-data = 'data/case_study/EURUSD_h1_case_study_D1_for_2017_5_1.csv'
+# data = 'data/case_study/EURUSD_h1_case_study_D1_for_2017_5_1.csv'
 
 # arrays used to record to ouput CSV file
 times = []
@@ -27,7 +27,7 @@ traget_month = 'May'
 taget_day = 1
 # target range
 start = 1  # start iteration
-stop = 10   # stop iteration
+stop = 24   # stop iteration
 
 
 
@@ -41,11 +41,11 @@ stop = 10   # stop iteration
 
 # only accurate up to 13 (1pm)
 for time_ref in range(start, stop):
-    batch_size = (50 - ((time_ref * 5) + (int(time_ref / 2))))
-    if batch_size < 5:
-        batch_size = 5
+    batch_size = 75 + (time_ref * 25) #(50 - ((time_ref * 5) + (int(time_ref / 2))))
+    #if time_ref > 1:
+    #    batch_size = (time_ref * 50)
         
-    print('Time round: ' + str(time_ref))
+    print('Time round: {0}'.format(time_ref))
     print('Batch size: {0}'.format(batch_size))
     count = (20 * time_ref)
     hour = time_ref
@@ -62,7 +62,7 @@ for time_ref in range(start, stop):
     time_frame = predict_HLOC(
             data = data,
             batch_size = batch_size,
-            epochs = 8, # count,
+            epochs = 10, # count,
             hour = hour
         )
 
@@ -79,7 +79,7 @@ for time_ref in range(start, stop):
     # call price to measure
     # .all()
     time_frame.highs()
-    time_frame.lows()
+    #time_frame.lows()
     #time_frame.opens()
     #time_frame.closes()
 
