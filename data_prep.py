@@ -35,7 +35,7 @@ class data_prep(object):
         inputs = self.feature_scaler.transform(p_data)
         # input fields
         records = len(p_data)
-        time_step = -24
+        time_step = -1440
         features = 5
         inputs = np.reshape(inputs, (records, time_step, features))
         # make predictions
@@ -68,7 +68,7 @@ class data_prep(object):
 
         # reshaping
         # training offset: time-step
-        time_step = -24
+        time_step = -1440
         number_of_features = 5
         x_train = np.reshape(x_train, (max_training_records, time_step, number_of_features))
         self.x_train = x_train
@@ -89,44 +89,44 @@ class data_prep(object):
             hh = int(time[0])
             mm = int(time[1])
 
-            date2 = t_5[row - 1][self.date_field]
-            time2 = date2[-12:-7]
-            time2 = time2.split(':')
-            hh2 = int(time2[0])
-            mm2 = int(time2[1])
-            
-            
+            # date2 = t_5[row - 1][self.date_field]
+            # time2 = date2[-12:-7]
+            # time2 = time2.split(':')
+            # hh2 = int(time2[0])
+            # mm2 = int(time2[1])
+
+
 
 
             # prevent multiple hous from being pushed to time frame array
             last_hour = 0
-            first_hour_num = self.__first_hour(hh, last_hour)
+            # first_hour_num = self.__first_hour(hh, last_hour)
             # prevent any dup prices. This happens on times recorded on closed market hours
             no_dup = self.__no_dups(t_5[row - 1][2], t_5[row][2], t_5[row - 1][3], t_5[row - 1][3])
 
-            if hh != hh2:
-                if hh == 23 and first_hour_num and no_dup:
-                    self.dd_1.append(t_5[row, 1:])
-
-                if hh % h_4 == 0 and hh >= h_4 and first_hour_num and no_dup:
-                    self.hh_4.append(t_5[row, 1:])
-
-                #if (hh % custom_hour == 0 or hh < custom_hour) and first_hour_num and no_dup:
-                #    self.custom_hh.append(t_5[row, 1:])
-
-            if mm == 0 and no_dup:
-                self.hh_1.append(t_5[row, 1:])
-
-            if (hh == 0 or mm == m_30) and no_dup:
-                self.mm_30.append(t_5[row, 1:])
-
-            if ( mm == m_15 or mm == m_30 or mm == 45 or hh == 0) and no_dup:
-                self.mm_15.append(t_5[row, 1:])
+            # if hh != hh2:
+            #     if hh == 23 and first_hour_num and no_dup:
+            #         self.dd_1.append(t_5[row, 1:])
+            #
+            #     if hh % h_4 == 0 and hh >= h_4 and first_hour_num and no_dup:
+            #         self.hh_4.append(t_5[row, 1:])
+            #
+            #     #if (hh % custom_hour == 0 or hh < custom_hour) and first_hour_num and no_dup:
+            #     #    self.custom_hh.append(t_5[row, 1:])
+            #
+            # if mm == 0 and no_dup:
+            #     self.hh_1.append(t_5[row, 1:])
+            #
+            # if (hh == 0 or mm == m_30) and no_dup:
+            #     self.mm_30.append(t_5[row, 1:])
+            #
+            # if ( mm == m_15 or mm == m_30 or mm == 45 or hh == 0) and no_dup:
+            #     self.mm_15.append(t_5[row, 1:])
 
             #if mm % custom_minute == 0 and mm > custom_minute and no_dup:
             #    self.custom_mm.append(t_5[row, 1:])
-            
-            if (hh == custom_hour) and no_dup:
+
+            if (hh <= custom_hour) and no_dup:
                 self.custom_hh.append(t_5[row, 1:])
 
 

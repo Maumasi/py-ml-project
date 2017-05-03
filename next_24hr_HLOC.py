@@ -36,36 +36,32 @@ stop = 20   # stop iteration
 
 # Methods finished being called
 # .all() 
-# .highs() +
-# .lows() +
-# .opens() +
+# .highs()
+# .lows()
+# .opens()
 # .closes()
 
 
 # only accurate up to 13 (1pm)
 for time_ref in range(start, stop):
-    batch_size = 5 #+ (time_ref * 50) #(50 - ((time_ref * 5) + (int(time_ref / 2))))
-    #if time_ref > 1:
-    #    batch_size = (time_ref * 50)
-        
+    # for 1hr records
+    batch_size = 50 # + (time_ref * 50) #(50 - ((time_ref * 5) + (int(time_ref / 2))))
+    
+    #for 1min records
+    #batch_size = 350
+    
     print('Time round: {0}'.format(time_ref))
     print('Batch size: {0}'.format(batch_size))
     count = (20 * time_ref)
     hour = time_ref
     min_5 = (time_ref * 5)
 
-    # 200 seems to be a good ref to boil down loss levels
-    if count >= 50:
-        count = 50
-        
-    if batch_size == 5:
-        count = 20
 
     # for predicting custom hour intervals
     time_frame = predict_HLOC(
             data = data,
             batch_size = batch_size,
-            epochs = 20, # count,
+            epochs = 50, # count,
             hour = hour
         )
 
