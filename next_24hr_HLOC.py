@@ -4,8 +4,11 @@ import time
 import csv
 # from time import sleep
 
-# 1 hour data
-data = 'data/EURUSD_Candlestick_1_m_ASK_05.01.2015-27.04.2017.csv'
+# 1 hour data: gives the range of each line
+data = 'data/EURUSD_h1_current_27.csv'
+
+# 1 minute data
+#data = 'data/EURUSD_Candlestick_1_m_ASK_05.01.2015-27.04.2017.csv'
 
 # 5 min data
 # data = 'data/EURUSD_5min_pred_27.csv'
@@ -27,7 +30,7 @@ traget_month = 'May'
 taget_day = 1
 # target range
 start = 1  # start iteration
-stop = 24   # stop iteration
+stop = 20   # stop iteration
 
 
 
@@ -41,7 +44,7 @@ stop = 24   # stop iteration
 
 # only accurate up to 13 (1pm)
 for time_ref in range(start, stop):
-    batch_size = 75 + (time_ref * 25) #(50 - ((time_ref * 5) + (int(time_ref / 2))))
+    batch_size = 5 #+ (time_ref * 50) #(50 - ((time_ref * 5) + (int(time_ref / 2))))
     #if time_ref > 1:
     #    batch_size = (time_ref * 50)
         
@@ -62,7 +65,7 @@ for time_ref in range(start, stop):
     time_frame = predict_HLOC(
             data = data,
             batch_size = batch_size,
-            epochs = 10, # count,
+            epochs = 20, # count,
             hour = hour
         )
 

@@ -16,7 +16,7 @@ class train_model(object):
         self.__train()
 
 
-    def __train(self, neurons = 80, batch_size = 80, epochs = 100):
+    def __train(self, neurons = 100, batch_size = 80, epochs = 100):
         # init RNN
         # rnn_regresion = Sequential()
 

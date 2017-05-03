@@ -35,7 +35,7 @@ class data_prep(object):
         inputs = self.feature_scaler.transform(p_data)
         # input fields
         records = len(p_data)
-        time_step = 1
+        time_step = -24
         features = 5
         inputs = np.reshape(inputs, (records, time_step, features))
         # make predictions
@@ -68,7 +68,7 @@ class data_prep(object):
 
         # reshaping
         # training offset: time-step
-        time_step = 1
+        time_step = -24
         number_of_features = 5
         x_train = np.reshape(x_train, (max_training_records, time_step, number_of_features))
         self.x_train = x_train
@@ -126,7 +126,7 @@ class data_prep(object):
             #if mm % custom_minute == 0 and mm > custom_minute and no_dup:
             #    self.custom_mm.append(t_5[row, 1:])
             
-            if (hh <= custom_hour) and no_dup:
+            if (hh == custom_hour) and no_dup:
                 self.custom_hh.append(t_5[row, 1:])
 
 
