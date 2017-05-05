@@ -8,8 +8,8 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
 # create training set
-training_original = pd.read_csv('data/EURUSD_h1_current_27.csv')
-training_set = training_original.iloc[:, 1:].values
+training_original = pd.read_csv('data/EURUSDpro1.csv')
+training_set = training_original.iloc[:, 2:].values
 
 # features
 feature_scaler = MinMaxScaler()
@@ -68,7 +68,7 @@ rnn_regresion.compile(
 rnn_regresion.fit(
         x_train,
         y_train,
-        batch_size = 150,
+        batch_size = 2,
         epochs = 5
         )
 
@@ -76,9 +76,9 @@ rnn_regresion.fit(
 # Pt 3 =-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=--=--=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-==
 
 # create testing set
-test_original = pd.read_csv('data/EURUSD_h1_current_27.csv')
+test_original = pd.read_csv('data/EURUSDpro1.csv')
 
-real_price_set = test_original.iloc[:, 1:].values
+real_price_set = test_original.iloc[:, 2:].values
 
 # scale inputs: feature_scaler
 inputs = feature_scaler.transform(real_price_set)
@@ -135,6 +135,8 @@ t = squared/800
 
 
 # this may be good for using after trained models are made parsing CSVs =-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=--=--=-=-=-=-=-=-=
+import pandas as pd
+import csv
 
 m_15 = 15
 m_30 = 30
@@ -147,6 +149,8 @@ mm_30 = []
 hh_1 = []
 hh_4 = []
 dd_1 = []
+test = []
+collection = []
 
 last_hour = 0
 
@@ -166,18 +170,19 @@ def no_dups(open1, close1, open2, close2):
 
 
 
-t_5 = pd.read_csv('data/EURUSD_h1_pred_28.csv').values
+t_5 = pd.read_csv('data/EURUSDpro1.csv').values
 
+file_name = 'predictions/custom_hour_data.csv'
 # create arrays for the different time frames to train individual RNN's on
 for row in range(len(t_5)):
-    date = t_5[row][0]
-    time = date[-12:-7]
-    time = time.split(':')
+    date = t_5[row][1]
+    #time = date[-5:]
+    time = date.split(':')
     hh = int(time[0])
     mm = int(time[1])
 
-    date2 = t_5[row - 1][0]
-    time2 = date2[-12:-7]
+    date2 = t_5[row - 1][1]
+    time2 = date2[-5:]
     time2 = time2.split(':')
     hh2 = int(time2[0])
     mm2 = int(time2[1])
@@ -193,6 +198,7 @@ for row in range(len(t_5)):
 
         if hh % h_4 == 0 and hh > h_4 and first_hour_num and no_dup:
             hh_4.append(t_5[row, 2])
+            
 
     if mm == 0 and no_dup:
         hh_1.append(t_5[row, 2])
@@ -202,8 +208,18 @@ for row in range(len(t_5)):
 
     if mm % m_15 == 0 and row > m_15 and no_dup:
         mm_15.append(t_5[row, 2])
+    
+    if mm == 0 and first_hour_num and no_dup:
+        #collection.append(t_5[row, 2])
+        ta = [t_5[row, 0], t_5[row, 1], t_5[row, 2], t_5[row, 3], t_5[row, 4], t_5[row, 5], t_5[row, 6]]
+        test.append(ta)
+                    
+with open(file_name, 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerows(test)
 
 
+print(collection)
 
 
 print(len(dd_1))

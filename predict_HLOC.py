@@ -24,43 +24,43 @@ class predict_HLOC(object):
 
         
     def all(self):
-        price_open = 1
-        price_high = 2
-        price_low = 3
-        price_close = 4
+        price_open = 2
+        price_high = 3
+        price_low = 4
+        price_close = 5
 
         # prep training data for prices
-        high_data = data_prep(self.hour_data, price_high)
-        low_data = data_prep(self.hour_data, price_low)
-        open_data = data_prep(self.hour_data, price_open)
-        close_data = data_prep(self.hour_data, price_close)
+        data = data_prep(self.hour_data, price_high)
+        #low_data = data_prep(self.hour_data, price_low)
+        #open_data = data_prep(self.hour_data, price_open)
+        #close_data = data_prep(self.hour_data, price_close)
         # extract training data
 
         # init RNN models: this also trains the RNN model
         model_high = train_model(
-                high_data.x_train,
-                high_data.y_train,
+                data.x_train,
+                data.y_train,
                 batch_size = self.batch_size,
                 epochs = self.epochs
             )
 
         model_low = train_model(
-                low_data.x_train,
-                low_data.y_train,
+                data.x_train,
+                data.y_train,
                 batch_size = self.batch_size,
                 epochs = self.epochs
             )
 
         model_open = train_model(
-                open_data.x_train,
-                open_data.y_train,
+                data.x_train,
+                data.y_train,
                 batch_size = self.batch_size,
                 epochs = self.epochs
             )
 
         model_close = train_model(
-                close_data.x_train,
-                close_data.y_train,
+                data.x_train,
+                data.y_train,
                 batch_size = self.batch_size,
                 epochs = self.epochs
             )
@@ -92,7 +92,7 @@ class predict_HLOC(object):
     
         
     def highs(self):
-        price_high = 2
+        price_high = 3
         # prep training data for prices
         high_data = data_prep(self.hour_data, price_high)
         # init RNN models: this also trains the RNN model
@@ -112,7 +112,7 @@ class predict_HLOC(object):
         self.high = high_data_p.last_prediction
         
     def lows(self):
-        price_low = 3
+        price_low = 4
         # prep training data for prices
         low_data = data_prep(self.hour_data, price_low)
         # init RNN models: this also trains the RNN model
@@ -133,7 +133,7 @@ class predict_HLOC(object):
     
     
     def opens(self):
-        price_open = 1
+        price_open = 2
 
         # prep training data for prices
         open_data = data_prep(self.hour_data, price_open)
@@ -155,7 +155,7 @@ class predict_HLOC(object):
         
     
     def closes(self):
-        price_close = 1
+        price_close = 5
         # prep training data for prices
         close_data = data_prep(self.hour_data, price_close)
         # extract training data

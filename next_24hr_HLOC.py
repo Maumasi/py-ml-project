@@ -2,13 +2,13 @@ from predict_HLOC import *
 from lab_chart import *
 import time
 import csv
-# from time import sleep
+from time import sleep
 
 # 1 hour data: gives the range of each line
-data = 'data/EURUSD_h1_current_27.csv'
+#data = 'data/EURUSD_h1_current_27.csv'
 
 # 1 minute data
-#data = 'data/EURUSD_Candlestick_1_m_ASK_05.01.2015-27.04.2017.csv'
+data = 'data/custom_hour_data-testing.csv'
 
 # 5 min data
 # data = 'data/EURUSD_5min_pred_27.csv'
@@ -31,7 +31,7 @@ taget_day = 1
 # target range
 start = 1  # start iteration
 stop = 20   # stop iteration
-
+wait_time = 120
 
 
 # Methods finished being called
@@ -45,23 +45,23 @@ stop = 20   # stop iteration
 # only accurate up to 13 (1pm)
 for time_ref in range(start, stop):
     # for 1hr records
-    batch_size = 50 # + (time_ref * 50) #(50 - ((time_ref * 5) + (int(time_ref / 2))))
+    batch_size = 20 #5 + (time_ref * 5) #(50 - ((time_ref * 5) + (int(time_ref / 2))))
     
     #for 1min records
     #batch_size = 350
     
     print('Time round: {0}'.format(time_ref))
     print('Batch size: {0}'.format(batch_size))
-    count = (20 * time_ref)
+    #count = (20 * time_ref)
     hour = time_ref
-    min_5 = (time_ref * 5)
+    #min_5 = (time_ref * 5)
 
 
     # for predicting custom hour intervals
     time_frame = predict_HLOC(
             data = data,
             batch_size = batch_size,
-            epochs = 50, # count,
+            epochs = 10, # count,
             hour = hour
         )
 
@@ -76,7 +76,7 @@ for time_ref in range(start, stop):
     
     
     # call price to measure
-    # .all()
+    #time_frame.all()
     time_frame.highs()
     #time_frame.lows()
     #time_frame.opens()
@@ -89,7 +89,7 @@ for time_ref in range(start, stop):
     lows.append(time_frame.low)
     closes.append(time_frame.close)
     # give the computer a chance to cool down
-    # sleep(minutes)
+    #sleep(wait_time)
 
 
 # make csv file

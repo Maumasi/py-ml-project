@@ -11,7 +11,7 @@ class data_prep(object):
         super(data_prep, self).__init__()
         self.x_train = []
         self.y_train = []
-        self.date_field = 0
+        self.date_field = 1
         # init arrays for
         self.custom_hh = []
         self.custom_mm = []
@@ -24,18 +24,18 @@ class data_prep(object):
         self.last_prediction = 0.0
         self.feature_scaler = MinMaxScaler()
         # prep data and set time frames
-        self.__prep(data, 1)
-        self.__parse_time_frames(data, custom_hour = custom_hour, custom_minute = custom_minute, price_position = 1, parse_time = parse_time)
+        self.__prep(data, 2)
+        self.__parse_time_frames(data, custom_hour = custom_hour, custom_minute = custom_minute, price_position = 2, parse_time = parse_time)
 
-    def prediction(self, data, rnn, price_position = 1):
+    def prediction(self, data, rnn, price_position = 2):
         p_data = pd.read_csv(data)
-        p_data = p_data.iloc[:, 1:].values
+        p_data = p_data.iloc[:, 2:].values
         # self.feature_scaler.fit_transform(p_data)
 
         inputs = self.feature_scaler.transform(p_data)
         # input fields
         records = len(p_data)
-        time_step = -1440
+        time_step = 1
         features = 5
         inputs = np.reshape(inputs, (records, time_step, features))
         # make predictions
@@ -46,15 +46,17 @@ class data_prep(object):
 
 
 
-    def __prep(self, data, price_position = 1):
+    def __prep(self, data, price_position = 2):
 
         if isinstance(data, str):
             # create training set
             training_original = pd.read_csv(data)
-            training_set = training_original.iloc[:, price_position:].values
+                        
+            training_set = training_original.iloc[:, 2:].values
 
         else:
             training_set = data
+            
 
         training_set_scaled = self.feature_scaler.fit_transform(training_set)
         # num to drop the last record
@@ -68,7 +70,7 @@ class data_prep(object):
 
         # reshaping
         # training offset: time-step
-        time_step = -1440
+        time_step = 1
         number_of_features = 5
         x_train = np.reshape(x_train, (max_training_records, time_step, number_of_features))
         self.x_train = x_train
@@ -79,34 +81,34 @@ class data_prep(object):
     def __parse_time_frames(self, data, custom_hour, custom_minute, price_position = 1, parse_time = False, m_15 = 15, m_30 = 30, h_1 = 1, h_4 = 4):
         if not parse_time:
             return -1
+                
         t_5 = pd.read_csv(data).values
         # create arrays for the different time frames to train individual RNN's on
         for row in range(len(t_5)):
             date = t_5[row][self.date_field]
-
-            time = date[-12:-7]
-            time = time.split(':')
+            #time = date[-5:]
+            time = date.split(':')
             hh = int(time[0])
             mm = int(time[1])
 
-            # date2 = t_5[row - 1][self.date_field]
-            # time2 = date2[-12:-7]
-            # time2 = time2.split(':')
-            # hh2 = int(time2[0])
-            # mm2 = int(time2[1])
+            #date2 = t_5[row - 1][self.date_field]
+            #time2 = date2[-5:]
+            #time2 = date2.split(':')
+            #hh2 = int(time2[0])
+            #mm2 = int(time2[1])
 
 
 
 
             # prevent multiple hous from being pushed to time frame array
             last_hour = 0
-            # first_hour_num = self.__first_hour(hh, last_hour)
+            first_hour_num = self.__first_hour(hh, last_hour)
             # prevent any dup prices. This happens on times recorded on closed market hours
             no_dup = self.__no_dups(t_5[row - 1][2], t_5[row][2], t_5[row - 1][3], t_5[row - 1][3])
 
-            # if hh != hh2:
-            #     if hh == 23 and first_hour_num and no_dup:
-            #         self.dd_1.append(t_5[row, 1:])
+            #if hh != hh2:
+            #    if hh == 23 and first_hour_num and no_dup:
+            #        self.dd_1.append(t_5[row, 1:])
             #
             #     if hh % h_4 == 0 and hh >= h_4 and first_hour_num and no_dup:
             #         self.hh_4.append(t_5[row, 1:])
@@ -126,8 +128,8 @@ class data_prep(object):
             #if mm % custom_minute == 0 and mm > custom_minute and no_dup:
             #    self.custom_mm.append(t_5[row, 1:])
 
-            if (hh <= custom_hour) and no_dup:
-                self.custom_hh.append(t_5[row, 1:])
+            if (hh == custom_hour) and first_hour_num and no_dup:
+                self.custom_hh.append(t_5[row, 2:])
 
 
     # only used to parse records into time frames
